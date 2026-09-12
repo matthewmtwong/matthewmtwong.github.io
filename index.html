@@ -4,212 +4,742 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Matthew Wong</title>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Karla:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+  <meta name="description" content="Law, AI, and the space between. Incoming LLB at King's College London.">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Figtree:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap">
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
-      --bg: #FCFCFA;
-      --text: #1F1F1F;
-      --secondary: #8C8C8C;
-      --link-underline: rgba(31, 31, 31, 0.25);
-      --link-underline-hover: rgba(31, 31, 31, 0.6);
+      --bg: #F7F6F3;
+      --text: #1A1D2E;
+      --accent: #9A6B4C;
+      --secondary: #6B7084;
+      --surface: #EDECEA;
+      --border: #D8D6D1;
+      --glyph-opacity: 0.06;
+      --toggle-bg: rgba(26, 29, 46, 0.08);
+      --toggle-hover: rgba(26, 29, 46, 0.14);
+      --tag-bg: rgba(154, 107, 76, 0.1);
+      --tag-border: rgba(154, 107, 76, 0.25);
+      --timeline-line: #D8D6D1;
+      --timeline-dot: #9A6B4C;
+      --card-shadow: 0 1px 3px rgba(26, 29, 46, 0.06);
+      --tracker-gradient: linear-gradient(135deg, rgba(154,107,76,0.08), rgba(107,112,132,0.06));
     }
 
     @media (prefers-color-scheme: dark) {
-      :root {
-        --bg: #161616;
-        --text: #E0DED8;
-        --secondary: #7A7A7A;
-        --link-underline: rgba(224, 222, 216, 0.25);
-        --link-underline-hover: rgba(224, 222, 216, 0.6);
+      :root:not([data-theme="light"]) {
+        --bg: #13151E;
+        --text: #E4E2DB;
+        --accent: #C4956E;
+        --secondary: #8B8FA6;
+        --surface: #1C1E2A;
+        --border: #2A2D3D;
+        --glyph-opacity: 0.04;
+        --toggle-bg: rgba(228, 226, 219, 0.08);
+        --toggle-hover: rgba(228, 226, 219, 0.14);
+        --tag-bg: rgba(196, 149, 110, 0.12);
+        --tag-border: rgba(196, 149, 110, 0.25);
+        --timeline-line: #2A2D3D;
+        --timeline-dot: #C4956E;
+        --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+        --tracker-gradient: linear-gradient(135deg, rgba(196,149,110,0.1), rgba(139,143,166,0.06));
       }
+    }
+
+    :root[data-theme="dark"] {
+      --bg: #13151E;
+      --text: #E4E2DB;
+      --accent: #C4956E;
+      --secondary: #8B8FA6;
+      --surface: #1C1E2A;
+      --border: #2A2D3D;
+      --glyph-opacity: 0.04;
+      --toggle-bg: rgba(228, 226, 219, 0.08);
+      --toggle-hover: rgba(228, 226, 219, 0.14);
+      --tag-bg: rgba(196, 149, 110, 0.12);
+      --tag-border: rgba(196, 149, 110, 0.25);
+      --timeline-line: #2A2D3D;
+      --timeline-dot: #C4956E;
+      --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+      --tracker-gradient: linear-gradient(135deg, rgba(196,149,110,0.1), rgba(139,143,166,0.06));
     }
 
     body {
       background: var(--bg);
       color: var(--text);
-      font-family: 'Karla', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-family: 'Figtree', -apple-system, BlinkMacSystemFont, sans-serif;
       font-size: 15px;
       line-height: 1.7;
-      max-width: 560px;
+      padding-inline: 24px;
+      padding-block: 0;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    .wrapper {
+      max-width: 900px;
       margin: 0 auto;
-      padding: 100px 24px 140px;
+      padding-block: 80px 120px;
     }
 
     a {
-      color: var(--text);
+      color: var(--accent);
       text-decoration: underline;
-      text-decoration-color: var(--link-underline);
+      text-decoration-color: rgba(154, 107, 76, 0.3);
       text-underline-offset: 3px;
-      transition: text-decoration-color 0.2s;
+      transition: text-decoration-color 0.2s, color 0.2s;
     }
+    a:hover { text-decoration-color: var(--accent); }
+    a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
-    a:hover {
-      text-decoration-color: var(--link-underline-hover);
-    }
-
-    a:focus-visible {
-      outline: 2px solid var(--text);
-      outline-offset: 2px;
-    }
-
-    .name {
-      font-family: 'Cormorant', Georgia, serif;
-      font-size: 48px;
-      font-weight: 500;
-      font-style: italic;
-      line-height: 1.05;
+    /* ── Theme toggle ── */
+    .theme-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 100;
+      width: 40px;
+      height: 40px;
+      border: none;
+      border-radius: 50%;
+      background: var(--toggle-bg);
       color: var(--text);
-      margin-bottom: 12px;
-      letter-spacing: -0.5px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      transition: background 0.2s;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
     }
+    .theme-toggle:hover { background: var(--toggle-hover); }
+    .theme-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
-    .intro {
-      font-size: 16px;
+    /* ── Hero ── */
+    .hero {
+      position: relative;
+      margin-bottom: 72px;
+      overflow: hidden;
+    }
+    .hero-glyph {
+      position: absolute;
+      top: -30px;
+      right: -20px;
+      font-size: 220px;
+      font-weight: 400;
+      line-height: 1;
+      color: var(--text);
+      opacity: var(--glyph-opacity);
+      pointer-events: none;
+      user-select: none;
+      font-family: serif;
+    }
+    .hero-name {
+      font-family: 'Young Serif', Georgia, serif;
+      font-size: 52px;
+      font-weight: 400;
+      line-height: 1.1;
+      color: var(--text);
+      margin-bottom: 8px;
+      position: relative;
+      text-wrap: balance;
+    }
+    .hero-tagline {
+      font-size: 17px;
       color: var(--secondary);
-      margin-bottom: 56px;
-      line-height: 1.6;
+      margin-bottom: 20px;
+      font-weight: 400;
+      position: relative;
     }
-
-    .bio {
-      font-size: 15.5px;
+    .hero-bio {
+      font-size: 16px;
       line-height: 1.75;
-      margin-bottom: 56px;
+      max-width: 620px;
+      position: relative;
+      color: var(--text);
     }
 
-    .entries {
-      margin-bottom: 56px;
-    }
-
-    .entry {
+    /* ── Section headings ── */
+    .section-label {
+      font-family: 'Figtree', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--accent);
       margin-bottom: 24px;
     }
+    .section { margin-bottom: 72px; }
 
-    .entry-title {
-      font-family: 'Cormorant', Georgia, serif;
-      font-size: 21px;
-      font-weight: 600;
-      line-height: 1.3;
-      margin-bottom: 2px;
+    /* ── Projects grid ── */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
     }
-
-    .entry-meta {
-      font-size: 13px;
-      color: var(--secondary);
-      margin-bottom: 4px;
+    .project-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 24px;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
     }
-
-    .entry-desc {
+    .project-card:hover {
+      border-color: var(--accent);
+      box-shadow: var(--card-shadow);
+    }
+    .project-card-title {
+      font-family: 'Young Serif', Georgia, serif;
+      font-size: 20px;
+      font-weight: 400;
+      color: var(--text);
+    }
+    .project-card-role {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--accent);
+      letter-spacing: 0.3px;
+    }
+    .project-card-desc {
       font-size: 14px;
       color: var(--secondary);
       line-height: 1.65;
+      flex: 1;
+    }
+    .project-card-link {
+      font-size: 13px;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: 4px;
+    }
+    .project-card-link .arrow {
+      transition: transform 0.2s;
+      display: inline-block;
+    }
+    .project-card:hover .project-card-link .arrow {
+      transform: translateX(3px);
     }
 
-    .small-section {
-      margin-bottom: 56px;
+    /* Featured tracker card */
+    .project-card.featured {
+      grid-column: 1 / -1;
+      background: var(--tracker-gradient);
+      border-color: var(--accent);
     }
-
-    .small-heading {
-      font-family: 'Cormorant', Georgia, serif;
-      font-size: 21px;
+    .featured-inner {
+      display: flex;
+      gap: 24px;
+      align-items: center;
+    }
+    .featured-text { flex: 1; }
+    .featured-badge {
+      font-size: 11px;
       font-weight: 600;
-      margin-bottom: 12px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: var(--tag-bg);
+      padding: 3px 10px;
+      border-radius: 4px;
+      display: inline-block;
+      margin-bottom: 8px;
     }
-
-    .small-item {
-      font-size: 14px;
-      line-height: 1.8;
-      color: var(--text);
-    }
-
-    .small-item span {
-      color: var(--secondary);
-    }
-
-    .footer-links {
+    .featured-stat {
       display: flex;
       gap: 20px;
+      margin-top: 12px;
+    }
+    .featured-stat-item {
+      font-size: 13px;
+      color: var(--secondary);
+    }
+    .featured-stat-item strong {
+      color: var(--text);
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* ── Timeline ── */
+    .timeline-track {
+      overflow-x: auto;
+      padding-bottom: 16px;
+      scrollbar-width: thin;
+      scrollbar-color: var(--border) transparent;
+    }
+    .timeline-track::-webkit-scrollbar { height: 4px; }
+    .timeline-track::-webkit-scrollbar-track { background: transparent; }
+    .timeline-track::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+    .timeline-inner {
+      display: flex;
+      gap: 0;
+      min-width: max-content;
+      position: relative;
+      padding-top: 8px;
+    }
+    .timeline-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 160px;
+      position: relative;
+      padding: 0 12px;
+    }
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      top: 5px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--timeline-line);
+    }
+    .timeline-item:first-child::before { left: 50%; }
+    .timeline-item:last-child::before { right: 50%; }
+    .timeline-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--timeline-dot);
+      border: 2px solid var(--bg);
+      position: relative;
+      z-index: 1;
+      flex-shrink: 0;
+    }
+    .timeline-year {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--accent);
+      margin-top: 10px;
+      font-variant-numeric: tabular-nums;
+    }
+    .timeline-label {
+      font-size: 13px;
+      color: var(--text);
+      text-align: center;
+      margin-top: 4px;
+      line-height: 1.4;
+      max-width: 140px;
+    }
+    .timeline-sub {
+      font-size: 11px;
+      color: var(--secondary);
+      text-align: center;
+      margin-top: 2px;
+    }
+
+    /* ── Skills ── */
+    .skills-wrap {
+      display: flex;
       flex-wrap: wrap;
+      gap: 10px;
+    }
+    .skill-tag {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text);
+      background: var(--tag-bg);
+      border: 1px solid var(--tag-border);
+      padding: 6px 14px;
+      border-radius: 20px;
+      transition: background 0.2s, border-color 0.2s, color 0.2s;
+      white-space: nowrap;
+    }
+    .skill-tag:hover {
+      background: var(--accent);
+      color: var(--bg);
+      border-color: var(--accent);
+    }
+    .skills-group {
+      margin-bottom: 20px;
+    }
+    .skills-group-label {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--secondary);
+      margin-bottom: 10px;
+      letter-spacing: 0.3px;
+    }
+
+    /* ── Awards ── */
+    .award-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .award-item {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+    .award-marker {
+      width: 3px;
+      min-height: 18px;
+      background: var(--accent);
+      border-radius: 2px;
+      flex-shrink: 0;
+      align-self: stretch;
+    }
+    .award-name { color: var(--text); }
+    .award-detail {
+      color: var(--secondary);
       font-size: 14px;
-      color: var(--secondary);
+      margin-left: 4px;
     }
 
-    .footer-links a {
-      color: var(--secondary);
+    /* ── Education ── */
+    .edu-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
     }
-
-    .footer-links a:hover {
+    .edu-school {
+      font-family: 'Young Serif', Georgia, serif;
+      font-size: 18px;
+      font-weight: 400;
       color: var(--text);
     }
+    .edu-meta {
+      font-size: 13px;
+      color: var(--secondary);
+      margin-top: 2px;
+    }
+    .edu-extras {
+      font-size: 13px;
+      color: var(--secondary);
+      margin-top: 8px;
+      font-style: italic;
+    }
 
-    @media (max-width: 480px) {
-      body {
-        padding: 64px 20px 100px;
-      }
+    /* ── Footer ── */
+    .footer {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+      padding-top: 40px;
+      border-top: 1px solid var(--border);
+    }
+    .footer a {
+      font-size: 14px;
+      color: var(--secondary);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer a:hover { color: var(--accent); }
 
-      .name {
-        font-size: 36px;
-      }
+    /* ── Scroll reveal ── */
+    .reveal {
+      opacity: 0.92;
+      transform: translateY(12px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .reveal { opacity: 1; transform: none; transition: none; }
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 640px) {
+      .wrapper { padding-block: 60px 80px; }
+      .hero-name { font-size: 38px; }
+      .hero-glyph { font-size: 150px; top: -20px; right: -10px; }
+      .projects-grid { grid-template-columns: 1fr; }
+      .featured-inner { flex-direction: column; }
+      .featured-stat { flex-wrap: wrap; gap: 12px; }
+      .section { margin-bottom: 56px; }
+      .timeline-item { min-width: 130px; }
+    }
+
+    @media (max-width: 400px) {
+      body { padding-inline: 16px; }
+      .hero-name { font-size: 32px; }
+      .hero-glyph { font-size: 120px; }
     }
   </style>
 </head>
 <body>
 
-<h1 class="name">Matthew Wong</h1>
-<p class="intro">Law, AI, and the space between.</p>
+<button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+  <span class="icon-sun">&#9788;</span>
+</button>
 
-<p class="bio">
-  Incoming LLB at King's College London (Dickson Poon School of Law). I build AI tools, research how law and technology intersect, and run a nonprofit tackling educational inequality in Hong Kong. Fluent in English, Cantonese, and Mandarin.
-</p>
+<div class="wrapper">
 
-<div class="entries">
-  <div class="entry">
-    <div class="entry-title">天機 Tiānjī</div>
-    <div class="entry-desc">A 7-module personal AI assistant system built on Claude, integrating Notion, Gmail, and Google Calendar. Handles daily intelligence briefings, research tracking, scheduling, and project management.</div>
-  </div>
+  <!-- Hero -->
+  <header class="hero">
+    <div class="hero-glyph" aria-hidden="true">&#22825;&#27231;</div>
+    <h1 class="hero-name">Matthew Wong</h1>
+    <p class="hero-tagline">Law, AI, and the space between.</p>
+    <p class="hero-bio">
+      Incoming LLB at King's College London (Dickson Poon School of Law). I build AI tools, research how law and technology intersect, and run a nonprofit tackling educational inequality in Hong Kong. Fluent in English, Cantonese, and Mandarin.
+    </p>
+  </header>
 
-  <div class="entry">
-    <div class="entry-title">Aura</div>
-    <div class="entry-meta">Co-Founder</div>
-    <div class="entry-desc">Writing authenticity platform using process provenance to verify intellectual effort. Rethinking how we prove original thinking in an AI-assisted world.</div>
-  </div>
+  <!-- Projects -->
+  <section class="section reveal">
+    <div class="section-label">Projects</div>
+    <div class="projects-grid">
 
-  <div class="entry">
-    <div class="entry-title">Lumina</div>
-    <div class="entry-meta">Founder & International Director</div>
-    <div class="entry-desc">Youth-led nonprofit tackling educational inequality in Hong Kong. 200+ students served, 40+ mentors trained. Currently leading a feasibility study on AI literacy in tutoring programmes.</div>
-  </div>
+      <a href="https://matthewmtwong.github.io/ai-regulation-tracker/" class="project-card featured" style="text-decoration:none; color:inherit;">
+        <div class="featured-inner">
+          <div class="featured-text">
+            <div class="featured-badge">Interactive Tool</div>
+            <div class="project-card-title">AI Regulation Tracker</div>
+            <div class="project-card-desc" style="margin-top:6px;">
+              Interactive dashboard tracking AI regulatory frameworks across the EU, US, UK, China, and international bodies. Search, filter, and compare legislation in real time.
+            </div>
+            <div class="featured-stat">
+              <div class="featured-stat-item"><strong>6</strong> Jurisdictions</div>
+              <div class="featured-stat-item"><strong>25+</strong> Regulations</div>
+              <div class="featured-stat-item"><strong>Live</strong> Updates</div>
+            </div>
+          </div>
+        </div>
+        <span class="project-card-link">Open Tracker <span class="arrow">&rarr;</span></span>
+      </a>
 
-  <div class="entry">
-    <div class="entry-title">AI Regulation Research</div>
-    <div class="entry-meta">Supervised by Dr Mertens, University of Chicago</div>
-    <div class="entry-desc">5,000-word paper analysing EU and US legal frameworks for AI regulation, balancing innovation with digital privacy rights.</div>
-  </div>
+      <div class="project-card">
+        <div class="project-card-title">&#22825;&#27231; Ti&#257;nj&#299;</div>
+        <div class="project-card-desc">A 7-module personal AI assistant system built on Claude, integrating Notion, Gmail, and Google Calendar. Handles daily intelligence briefings, research tracking, scheduling, and project management.</div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-card-title">Aura</div>
+        <div class="project-card-role">Co-Founder</div>
+        <div class="project-card-desc">Writing authenticity platform using process provenance to verify intellectual effort. Rethinking how we prove original thinking in an AI-assisted world.</div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-card-title">Lumina</div>
+        <div class="project-card-role">Founder &amp; International Director</div>
+        <div class="project-card-desc">Youth-led nonprofit tackling educational inequality in Hong Kong. 200+ students served, 40+ mentors trained. Currently leading a feasibility study on AI literacy in tutoring programmes.</div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-card-title">AI Regulation Research</div>
+        <div class="project-card-role">Supervised by Dr Mertens, University of Chicago</div>
+        <div class="project-card-desc">5,000-word paper analysing EU and US legal frameworks for AI regulation, balancing innovation with digital privacy rights.</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Timeline -->
+  <section class="section reveal">
+    <div class="section-label">Journey</div>
+    <div class="timeline-track">
+      <div class="timeline-inner">
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-year">2022</div>
+          <div class="timeline-label">Founded Lumina</div>
+          <div class="timeline-sub">Hong Kong</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-year">2024</div>
+          <div class="timeline-label">Sherborne School</div>
+          <div class="timeline-sub">Music Scholar</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-year">2025</div>
+          <div class="timeline-label">John Locke Prize</div>
+          <div class="timeline-sub">1st / 63,000+</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-year">2025</div>
+          <div class="timeline-label">Harvard Zero-L</div>
+          <div class="timeline-sub">Completed</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-year">2025</div>
+          <div class="timeline-label">Stanford CS106A</div>
+          <div class="timeline-sub">Code in Place</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-year">2026</div>
+          <div class="timeline-label">Co-founded Aura</div>
+          <div class="timeline-sub">Writing authenticity</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-year">2026</div>
+          <div class="timeline-label">Built &#22825;&#27231;</div>
+          <div class="timeline-sub">AI assistant system</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-year">2026</div>
+          <div class="timeline-label">KCL Law</div>
+          <div class="timeline-sub">Dickson Poon School</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Skills -->
+  <section class="section reveal">
+    <div class="section-label">Skills &amp; Tools</div>
+
+    <div class="skills-group">
+      <div class="skills-group-label">AI &amp; Development</div>
+      <div class="skills-wrap">
+        <span class="skill-tag">Python</span>
+        <span class="skill-tag">Claude API</span>
+        <span class="skill-tag">Prompt Engineering</span>
+        <span class="skill-tag">HTML / CSS / JS</span>
+        <span class="skill-tag">Notion API</span>
+        <span class="skill-tag">Gmail API</span>
+        <span class="skill-tag">Google Calendar API</span>
+        <span class="skill-tag">Data Visualisation</span>
+      </div>
+    </div>
+
+    <div class="skills-group">
+      <div class="skills-group-label">Legal &amp; Research</div>
+      <div class="skills-wrap">
+        <span class="skill-tag">Legal Research</span>
+        <span class="skill-tag">AI Policy &amp; Regulation</span>
+        <span class="skill-tag">Comparative Law</span>
+        <span class="skill-tag">Academic Writing</span>
+        <span class="skill-tag">Digital Privacy Law</span>
+      </div>
+    </div>
+
+    <div class="skills-group">
+      <div class="skills-group-label">Languages</div>
+      <div class="skills-wrap">
+        <span class="skill-tag">English (Native)</span>
+        <span class="skill-tag">&#24291;&#26481;&#35441; Cantonese (Native)</span>
+        <span class="skill-tag">&#26222;&#36890;&#35441; Mandarin (Fluent)</span>
+        <span class="skill-tag">&#25991;&#35328;&#25991; Classical Chinese</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Awards -->
+  <section class="section reveal">
+    <div class="section-label">Awards</div>
+    <div class="award-list">
+      <div class="award-item">
+        <div class="award-marker"></div>
+        <div><span class="award-name">John Locke Institute &mdash; Law Prize Winner</span><span class="award-detail">1st / 63,000+ entries</span></div>
+      </div>
+      <div class="award-item">
+        <div class="award-marker"></div>
+        <div><span class="award-name">Cambridge Robert Walker Law Prize</span><span class="award-detail">2nd, UK Division</span></div>
+      </div>
+      <div class="award-item">
+        <div class="award-marker"></div>
+        <div><span class="award-name">The Concord Review</span><span class="award-detail">Under Review</span></div>
+      </div>
+      <div class="award-item">
+        <div class="award-marker"></div>
+        <div><span class="award-name">Hang Seng New Gen CEO Competition</span><span class="award-detail">Top 50 / 1,000+</span></div>
+      </div>
+      <div class="award-item">
+        <div class="award-marker"></div>
+        <div><span class="award-name">Jardine Scholarship Finalist</span></div>
+      </div>
+      <div class="award-item">
+        <div class="award-marker"></div>
+        <div><span class="award-name">Duke of Edinburgh Gold</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Education -->
+  <section class="section reveal">
+    <div class="section-label">Education</div>
+    <div class="edu-list">
+      <div class="edu-item">
+        <div class="edu-school">King's College London</div>
+        <div class="edu-meta">Dickson Poon School of Law &middot; LLB &middot; 2026&ndash;2029</div>
+      </div>
+      <div class="edu-item">
+        <div class="edu-school">Sherborne School</div>
+        <div class="edu-meta">Music Scholar &middot; Headmaster's Commendation &middot; 2024&ndash;2026</div>
+      </div>
+      <div class="edu-item">
+        <div class="edu-extras">Harvard Law School Zero-L &middot; Stanford Code in Place (CS106A)</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <a href="https://www.linkedin.com/in/matthewmtwong/" target="_blank" rel="noopener">LinkedIn</a>
+    <a href="https://github.com/matthewmtwong" target="_blank" rel="noopener">GitHub</a>
+    <a href="mailto:2matthew.wong@gmail.com">Email</a>
+  </footer>
+
 </div>
 
-<div class="small-section">
-  <div class="small-heading">Awards</div>
-  <div class="small-item">John Locke Institute — Law Prize Winner <span>1st / 63,000+ entries</span></div>
-  <div class="small-item">Cambridge Robert Walker Law Prize <span>2nd, UK Division</span></div>
-  <div class="small-item">The Concord Review <span>Under Review</span></div>
-  <div class="small-item">Hang Seng New Gen CEO Competition <span>Top 50 / 1,000+</span></div>
-  <div class="small-item">Jardine Scholarship Finalist</div>
-  <div class="small-item">Duke of Edinburgh Gold</div>
-</div>
+<script>
+(function() {
+  var toggle = document.getElementById('themeToggle');
+  var root = document.documentElement;
 
-<div class="small-section">
-  <div class="small-heading">Education</div>
-  <div class="small-item">King's College London — Dickson Poon School of Law <span>LLB · 2026–2029</span></div>
-  <div class="small-item">Sherborne School <span>Music Scholar · Headmaster's Commendation · 2024–2026</span></div>
-  <div class="small-item" style="color: var(--secondary)">Harvard Law School Zero-L · Stanford Code in Place (CS106A)</div>
-</div>
+  function getSystemTheme() {
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
 
-<div class="footer-links">
-  <a href="https://www.linkedin.com/in/matthewmtwong/" target="_blank" rel="noopener">LinkedIn</a>
-  <a href="https://github.com/matthewmtwong" target="_blank" rel="noopener">GitHub</a>
-  <a href="mailto:2matthew.wong@gmail.com">Email</a>
-</div>
+  function applyTheme(theme) {
+    root.setAttribute('data-theme', theme);
+    toggle.innerHTML = theme === 'dark'
+      ? '<span class="icon-moon">&#9790;</span>'
+      : '<span class="icon-sun">&#9788;</span>';
+  }
+
+  // Init from storage or system
+  try {
+    var saved = localStorage.getItem('theme');
+    applyTheme(saved || getSystemTheme());
+  } catch(e) {
+    applyTheme(getSystemTheme());
+  }
+
+  toggle.addEventListener('click', function() {
+    var current = root.getAttribute('data-theme') || getSystemTheme();
+    var next = current === 'dark' ? 'light' : 'dark';
+    applyTheme(next);
+    try { localStorage.setItem('theme', next); } catch(e) {}
+  });
+
+  // Scroll reveal
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    var observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.reveal').forEach(function(el) {
+      observer.observe(el);
+    });
+  } else {
+    document.querySelectorAll('.reveal').forEach(function(el) {
+      el.classList.add('visible');
+    });
+  }
+})();
+</script>
 
 </body>
 </html>
